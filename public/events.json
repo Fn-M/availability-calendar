@@ -1,0 +1,16 @@
+[
+  {
+    "title": "Interview with Company A",
+    "start": "2025-04-15T10:00:00",
+    "end": "2025-04-15T11:00:00",
+    "invitees": ["person1@example.com"],
+    "notes": "Some notes about the interview"
+  },
+  {
+    "title": "Meeting with Client B",
+    "start": "2025-04-15T14:00:00",
+    "end": "2025-04-15T15:00:00",
+    "invitees": ["person2@example.com"],
+    "notes": "Some notes about the meeting"
+  }
+]

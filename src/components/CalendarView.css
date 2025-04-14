@@ -1,0 +1,60 @@
+.rbc-allday-cell {
+    display: none !important;
+  }
+
+.rbc-header {
+  height: 50px;  
+  display: flex;  
+  align-items: center; 
+  justify-content: center; 
+}
+
+.rbc-header button span[role="columnheader"] {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.rbc-toolbar-label{
+  font-size: 30px;
+  font-weight: bold;
+}
+
+
+.book-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+
+
+/* Step 1: Disable pointer events on the invisible container */
+.public-calendar .rbc-events-container,
+.admin-calendar .rbc-events-container {
+  pointer-events: none;
+}
+
+/* Admin: show pointer on empty time slots */
+.admin-calendar .rbc-time-slot {
+  cursor: pointer !important;
+}
+
+/* Admin can click events too */
+.admin-calendar .rbc-event {
+  cursor: pointer !important;
+}
+
+/* Step 2: Re-enable pointer events only on actual events */
+.public-calendar .rbc-event {
+  pointer-events: auto;
+  cursor: default !important; /* show arrow for booked slots */
+}
+
+/* Step 3: Now slots under the container are accessible and show pointer */
+.public-calendar .rbc-time-slot {
+  cursor: pointer !important;
+}
