@@ -48,13 +48,15 @@
   cursor: pointer !important;
 }
 
-/* Step 2: Re-enable pointer events only on actual events */
-.public-calendar .rbc-event {
-  pointer-events: auto;
-  cursor: default !important; /* show arrow for booked slots */
+.page-container {
+  padding: 40px;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  min-height: 100vh;
 }
 
-/* Step 3: Now slots under the container are accessible and show pointer */
-.public-calendar .rbc-time-slot {
-  cursor: pointer !important;
+.page-container h1 {
+  text-align: center;
+  margin-bottom: 30px;
 }
+

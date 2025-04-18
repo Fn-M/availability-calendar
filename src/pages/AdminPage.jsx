@@ -59,7 +59,10 @@ const AdminPage = () => {
     return <div>Loading...</div>; 
   }
 
-  return <CalendarView isAdmin={true} events={events} />;
+  return 
+  <div className="page-container">
+    <CalendarView isAdmin={true} events={events} />;
+  </div>
 };
 
 export default AdminPage;

@@ -15,6 +15,8 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
+
+
 const CalendarView = ({ events: initialEvents, isAdmin }) => {
   const [events, setEvents] = useState(initialEvents);
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -47,23 +49,29 @@ const CalendarView = ({ events: initialEvents, isAdmin }) => {
     return <span>{event.title}</span>;
   };
   
-  const handleSelectSlot = (slotInfo) => {
-    setSelectedSlot({
-      start: slotInfo.start,
-      end: slotInfo.end,
-    });
+  const handleSelectSlot = ({ start }) => {
+    const end = new Date(start.getTime() + 30 * 60 * 1000);
+    setSelectedSlot({ start, end });
     setShowModal(true);
   };
+  
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedSlot(null);
+  };
+  
 
   return (
     <div className={isAdmin ? 'admin-calendar' : 'public-calendar'}>
       
-      <div style={{ display: 'flex', justifyContent: 'flex-end', margin: '10px' }}>
-        <button onClick={() => setShowModal(true)} className="book-btn">
-          Book Timeslot
-        </button>
-      </div>
-
+      {isAdmin && (
+        <div style={{ display: 'flex', justifyContent: 'flex-end', margin: '10px' }}>
+          <button onClick={() => setShowModal(true)} className="book-btn">
+            Book Timeslot
+          </button>
+        </div>
+      )}
       <Calendar
         localizer={localizer}
         events={events}
@@ -81,17 +89,17 @@ const CalendarView = ({ events: initialEvents, isAdmin }) => {
         eventPropGetter={eventPropGetter}
         components={{ event: CustomEvent }}
         style={{ height: '80vh', margin: '20px' }}
-        selectable
-        onSelectSlot={handleSelectSlot}
+        selectable={isAdmin}
+        onSelectSlot={isAdmin ? handleSelectSlot : null}
       />
 
-      {showModal && selectedSlot &&(
+      {isAdmin && showModal && selectedSlot &&(
         <BookingModal
-          onClose={() => setShowModal(false)}
+          onClose={handleCloseModal}
           onSubmit={handleAddEvent}
           existingEvents={events}
-          initialStart={selectedSlot.start}
-          initialEnd={selectedSlot.end} 
+          initialStart={selectedSlot?.start}
+          initialEnd={selectedSlot?.end} 
         />
       )}
       </div>

@@ -27,8 +27,8 @@ const PublicPage = () => {
   }
 
   return (
-    <div>
-      <h1>Public Availability</h1>
+    <div className="page-container">
+      <h1>Available Time Slots – Fábio</h1>
       <CalendarView events={events} isAdmin={false} />
     </div>
   );
