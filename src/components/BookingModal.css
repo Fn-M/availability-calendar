@@ -1,4 +1,3 @@
-
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -10,72 +9,163 @@
   display: flex;
   align-items: center;
   justify-content: center;
-    z-index: 9999;
-  }
-  
-  .modal-content {
-    position: relative;
-    background: white;
-    border-radius: 16px;
-    padding: 32px;
-    width: 100%;
-    max-width: 500px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
-  }
-  
-  .modal-content h2{
-    margin-bottom: 20px;
-  }
+  z-index: 9999;
+}
+
+.modal-content {
+  position: relative;
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+}
+
+.modal-content h2 {
+  margin-bottom: 20px;
+}
 
 
-  .modal-content label {
-    display: block;
-    margin: 12px 0 4px;
-    font-weight: 600;
+.modal-content label {
+  display: block;
+  margin: 12px 0 4px;
+  font-weight: 600;
+}
+
+.modal-content input,
+.modal-content textarea,
+.modal-content .react-datepicker-wrapper {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.modal-content button {
+  margin-top: 10px;
+  margin-right: 10px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.modal-content button:hover {
+  background-color: #0056b3;
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  font-weight: bold;
+  color: #444;
+  cursor: pointer;
+  z-index: 1;
+  line-height: 1;
+}
+
+.modal-close:hover {
+  color: #000;
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(0);
   }
-  
-  .modal-content input,
-  .modal-content textarea,
-  .modal-content .react-datepicker-wrapper {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    margin-bottom: 12px;
-    font-size: 14px;
+
+  20% {
+    transform: translateX(-6px);
   }
-  
-  .modal-content button {
-    margin-top: 10px;
-    margin-right: 10px;
-    padding: 10px 16px;
-    border: none;
-    border-radius: 8px;
-    background-color: #007bff;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+
+  40% {
+    transform: translateX(6px);
   }
-  
-  .modal-content button:hover {
-    background-color: #0056b3;
+
+  60% {
+    transform: translateX(-4px);
   }
-  
-  .modal-close {
-    position: absolute;
-    top: 16px;
-    right: 20px;
-    background: none;
-    border: none;
-    font-size: 28px;
-    font-weight: bold;
-    color: #333;
-    cursor: pointer;
-    z-index: 1;
+
+  80% {
+    transform: translateX(4px);
   }
-  
-  .modal-close:hover {
-    color: #007bff;
+
+  100% {
+    transform: translateX(0);
   }
-  
+}
+
+.modal-content.shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+.modal-actions {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.update-btn {
+  background-color: #4caf50;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.delete-btn {
+  background-color: #f44336;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.submit-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+
+.download-ics-btn {
+  background: none !important;
+  border: none;
+  padding: 0;
+  margin: 0;
+  width: 32px;
+  height: 32px;
+  font-size: 40px;
+  line-height: 0px;
+  text-align: center;
+  cursor: pointer;
+}
+
+
+.download-ics-btn:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+  border-radius: 4px;
+}
+
+.spaced-actions {
+  display: flex;
+  justify-content: space-between;   /* Push sides apart */
+  align-items: center;
+  width: 100%;
+}
+
+.right-buttons {
+  display: flex;
+  gap: 10px;
+}

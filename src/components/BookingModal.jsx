@@ -1,32 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './BookingModal.css';
 
-const BookingModal = ({
-  onClose,
-  onSubmit,
-  existingEvents,
-  initialStart,
-  initialEnd,
-}) => {
-  const formatForDatetimeInput = (dateLike) => {
-    const d = new Date(dateLike); // assumed to be in local time
-    const pad = (n) => n.toString().padStart(2, '0');
-  
-    const yyyy = d.getFullYear();
-    const MM = pad(d.getMonth() + 1);
-    const dd = pad(d.getDate());
-    const hh = pad(d.getHours());
-    const mm = pad(d.getMinutes());
-  
-    return `${yyyy}-${MM}-${dd}T${hh}:${mm}`;
-  };
-  
-  const toLocalDatetimeInputValue = (date) => {
-    const pad = (n) => String(n).padStart(2, '0');
-    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
-  };
-  
-  
+const BookingModal = ({ onClose, onSubmit, onUpdate, onDelete, existingEvents, booking }) => {
   const [formData, setFormData] = useState({
     title: '',
     start: '',
@@ -34,113 +9,153 @@ const BookingModal = ({
     invitees: '',
     notes: '',
   });
-  
-  useEffect(() => {
-    if (initialStart && initialEnd) {
-      setFormData((prev) => ({
-        ...prev,
-        start: toLocalDatetimeInputValue(new Date(initialStart)),
-        end: toLocalDatetimeInputValue(new Date(initialEnd)),
-      }));
-    }
-  }, [initialStart, initialEnd]);
-  
+  const [error, setError] = useState('');
 
- const [error, setError] = useState('');
+  useEffect(() => {
+    if (booking) {
+      setFormData({
+        title: booking.title || '',
+        start: formatDateTimeLocal(booking.start),
+        end: formatDateTimeLocal(booking.end),
+        invitees: booking.invitees || '',
+        notes: booking.notes || '',
+      });
+    }
+  }, [booking]);
+
+  const formatDateTimeLocal = (date) => {
+    const d = new Date(date);
+    return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const hasClash = (start, end) => {
+    const newStart = new Date(start);
+    const newEnd = new Date(end);
+
+    return existingEvents.some((event) => {
+      if (booking?.id && event.id === booking.id) return false;
+      return newStart < new Date(event.end) && newEnd > new Date(event.start);
+    });
   };
 
   const handleSubmit = () => {
-    const newStart = new Date(formData.start);
-    const newEnd = new Date(formData.end);
+    const { start, end, title, invitees, notes } = formData;
+    const newStart = new Date(start);
+    const newEnd = new Date(end);
 
-    const hasConflict = existingEvents.some(
-      (event) =>
-        newStart < new Date(event.end) && newEnd > new Date(event.start)
-    );
-
-    if (hasConflict) {
-      setError('Selected timeslot overlaps with an existing booking.');
+    if (hasClash(start, end)) {
+      setError('⛔ Selected timeslot overlaps with an existing booking.');
       return;
     }
 
-    onSubmit({
-      title: formData.title,
+    const newBooking = {
+      id: booking?.id, // include id if editing
       start: newStart,
       end: newEnd,
-      invitees: formData.invitees,
-      notes: formData.notes,
-    });
+      title,
+      invitees,
+      notes,
+    };
 
+    if (booking?.id) {
+      onUpdate(newBooking);
+    } else {
+      onSubmit(newBooking);
+    }
+
+    setError('');
     onClose();
   };
 
+  const handleDelete = () => {
+    if (onDelete) onDelete();
+  };
+
+  const isEdit = !!booking?.id;
+
+  function downloadICS(event) {
+    const pad = (n) => String(n).padStart(2, '0');
+
+    const start = new Date(event.start);
+    const end = new Date(event.end);
+
+    const formatDate = (d) =>
+      `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}00Z`;
+
+    const notes = (event.notes || '').replace(/\n/g, '\\n');
+    const invitees = (event.invitees || '').replace(/\n/g, '\\n');
+    const description = `Invitees: ${invitees}\\nNotes: ${notes || ''}`;
+
+    const icsContent = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//YourApp//Availability Calendar//EN',
+      'CALSCALE:GREGORIAN',
+      'BEGIN:VEVENT',
+      `UID:${event.id || Date.now()}@yourapp.com`,
+      `DTSTAMP:${formatDate(new Date())}`,
+      `DTSTART:${formatDate(start)}`,
+      `DTEND:${formatDate(end)}`,
+      `SUMMARY:${event.title}`,
+      `DESCRIPTION:${description}`,
+      `LOCATION:${event.location || ''}`,
+      'END:VEVENT',
+      'END:VCALENDAR',
+    ].join('\r\n');
+
+    const blob = new Blob([icsContent], { type: 'text/calendar' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${event.title || 'booking'}.ics`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+
   return (
     <div className="modal-overlay">
-      <div className="modal-content">
-        <button className="modal-close" onClick={onClose}>
-          ×
-        </button>
-        <h2>Book Timeslot</h2>
-        {error && <p className="error">{error}</p>}
+      <div className={`modal-content ${error ? 'shake' : ''}`}>
+        <button className="modal-close" onClick={onClose}>×</button>
+        <h2>{isEdit ? 'Edit Booking' : 'Book Timeslot'}</h2>
+        {error && <div className="error">{error}</div>}
 
-        <div>
-          <label>Title:</label>
-          <input
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            required
-          />
+        <label>Title:</label>
+        <input name="title" value={formData.title} onChange={handleChange} required />
+
+        <label>Start Date & Time:</label>
+        <input type="datetime-local" name="start" value={formData.start} onChange={handleChange} required />
+
+        <label>End Date & Time:</label>
+        <input type="datetime-local" name="end" value={formData.end} onChange={handleChange} required />
+
+        <label>Invitees:</label>
+        <input name="invitees" value={formData.invitees} onChange={handleChange} />
+
+        <label>Notes:</label>
+        <textarea name="notes" value={formData.notes} onChange={handleChange} />
+
+        <div className="modal-actions">
+          {isEdit ? (
+            <div className="spaced-actions">
+              <button className="download-ics-btn" onClick={() => downloadICS(booking)}>
+                📅
+              </button>
+              <div className="right-buttons">
+                <button className="update-btn" onClick={handleSubmit}>Update</button>
+                <button className="delete-btn" onClick={handleDelete}>Delete</button>
+              </div>
+            </div>
+
+          ) : (
+            <button className="submit-btn" onClick={handleSubmit}>Submit</button>
+          )}
         </div>
-
-        <div>
-          <label>Start Date & Time:</label>
-          <input
-            type="datetime-local"
-            name="start"
-            value={formData.start}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div>
-          <label>End Date & Time:</label>
-          <input
-            type="datetime-local"
-            name="end"
-            value={formData.end}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div>
-          <label>Invitees:</label>
-          <input
-            name="invitees"
-            value={formData.invitees}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div>
-          <label>Notes:</label>
-          <textarea
-            name="notes"
-            value={formData.notes}
-            onChange={handleChange}
-          />
-        </div>
-
-        <button onClick={handleSubmit}>Submit</button>
       </div>
     </div>
   );
