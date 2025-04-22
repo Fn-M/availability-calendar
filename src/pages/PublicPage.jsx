@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import CalendarView from '../components/CalendarView';
+import ModernCalendar from '../components/ModernCalendar';
 
 const PublicPage = () => {
   const [events, setEvents] = useState([]);
@@ -42,7 +42,7 @@ const PublicPage = () => {
           View available time slots below to schedule an appointment.
         </p>
         <div className="max-w-7xl mx-auto bg-white p-6 shadow-lg rounded-lg">
-          <CalendarView events={events} isAdmin={false} />
+          <ModernCalendar events={events} isAdmin={false} />
         </div>
       </main>
 

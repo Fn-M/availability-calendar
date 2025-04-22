@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import CalendarView from '../components/CalendarView';
+import ModernCalendar from '../components/ModernCalendar';
 
 const AdminPage = () => {
   const [authenticated, setAuthenticated] = useState(false);
@@ -101,7 +101,7 @@ const AdminPage = () => {
         Admin: Fábio’s Calendar
       </h1>
       <div className="max-w-7xl mx-auto bg-white p-6 shadow-lg rounded-lg">
-        <CalendarView isAdmin={true} events={events} />
+        <ModernCalendar isAdmin={true} events={events} />
       </div>
     </div>
   );

@@ -169,3 +169,105 @@
   display: flex;
   gap: 10px;
 }
+
+.timezone-select {
+  margin-bottom: 1rem;
+}
+
+.timezone-select .Select__control {
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  min-height: 40px;
+}
+
+.timezone-select .Select__control:hover {
+  border-color: #b3b3b3;
+}
+
+.timezone-select .Select__control--is-focused {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px #2563eb;
+}
+
+.timezone-select .Select__menu {
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.timezone-select .Select__option {
+  padding: 8px 12px;
+}
+
+.timezone-select .Select__option--is-selected {
+  background-color: #2563eb;
+}
+
+.timezone-select .Select__option--is-focused {
+  background-color: #dbeafe;
+}
+
+.modal-input,
+.modal-textarea {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+}
+
+.modal-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.modal-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.spaced-actions {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.submit-btn,
+.update-btn,
+.delete-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.submit-btn,
+.update-btn {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.submit-btn:hover,
+.update-btn:hover {
+  background-color: #2563eb;
+}
+
+.delete-btn {
+  background-color: #ef4444;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #dc2626;
+}
+
+.error {
+  background-color: #fee2e2;
+  color: #dc2626;
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+}
