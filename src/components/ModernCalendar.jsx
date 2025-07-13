@@ -142,7 +142,7 @@ const ModernCalendar = ({ events: initialEvents, isAdmin }) => {
       const payload = {
         title: String(newEvent.title || ''),
         start: newEvent.start instanceof Date 
-          ? newEvent.start.toISOString() 
+          ? newEvent.start
           : new Date(newEvent.start).toISOString(),
         end: newEvent.end instanceof Date 
           ? newEvent.end.toISOString() 
@@ -152,8 +152,6 @@ const ModernCalendar = ({ events: initialEvents, isAdmin }) => {
         timezone: String(newEvent.timezone || 'Europe/Amsterdam')
       };
 
-      // Debug log
-      console.log('Sending payload:', payload);
 
       const response = await fetch(apiEndpoint + '/bookings', {
         method: 'POST',
@@ -164,11 +162,8 @@ const ModernCalendar = ({ events: initialEvents, isAdmin }) => {
         body: JSON.stringify(payload)
       });
 
-      // Log the raw response
-      console.log('Response status:', response.status);
 
       const data = await response.json();
-      console.log('Response data:', data);
 
       if (!response.ok) {
         throw new Error(data.message || 'Failed to create booking');
@@ -190,8 +185,6 @@ const ModernCalendar = ({ events: initialEvents, isAdmin }) => {
 
   const handleUpdateEvent = async (updatedEvent) => {
     try {
-      // Log the incoming event
-      console.log('Updating event:', updatedEvent);
 
       // Ensure all values are properly formatted
       const payload = {
@@ -208,8 +201,6 @@ const ModernCalendar = ({ events: initialEvents, isAdmin }) => {
         timezone: String(updatedEvent.timezone || 'Europe/Amsterdam')
       };
 
-      // Log the payload being sent
-      console.log('Sending update payload:', payload);
 
       const response = await fetch(apiEndpoint + '/bookings', {
         method: 'PUT',
@@ -221,9 +212,7 @@ const ModernCalendar = ({ events: initialEvents, isAdmin }) => {
       });
 
       // Log the response
-      console.log('Update response status:', response.status);
       const responseText = await response.text();
-      console.log('Update response text:', responseText);
 
       // Try to parse the response if it's JSON
       let data;
@@ -342,12 +331,12 @@ const ModernCalendar = ({ events: initialEvents, isAdmin }) => {
         </div>
 
         <div className="day-columns-container">
-          {(isMobile ? [currentDate] : weekDays).map((day, dayIndex) => (
+          {(isMobile ? [currentDate] : weekDays).map((day, dayIndex, arr) => (
             <div 
               key={dayIndex} 
-              className={`day-column ${isWeekend(day) ? 'weekend' : ''}`}
+              className={`day-column${isWeekend(day) ? ' weekend' : ''}${dayIndex !== arr.length - 1 ? ' not-last' : ''}`}
             >
-              <div className={`day-header ${isWeekend(day) ? 'weekend' : ''}`}>
+              <div className={`day-header${isWeekend(day) ? ' weekend' : ''}`}>
                 <div className="day-name">{format(day, 'EEE')}</div>
                 <div className="day-date">{format(day, 'd/MM')}</div>
               </div>
@@ -355,11 +344,11 @@ const ModernCalendar = ({ events: initialEvents, isAdmin }) => {
                 {timeSlots.map((timeSlot, timeIndex) => {
                   const event = getEventForSlot(day, timeSlot);
                   const isFirst = isFirstSlotOfEvent(day, timeSlot, event);
-
+                  const isWeekendDay = isWeekend(day);
                   return (
                     <div
                       key={timeIndex}
-                      className={`time-slot-cell ${event ? 'booked' : 'available'}`}
+                      className={`time-slot-cell${event ? ' booked' : ' available'}${isWeekendDay ? ' weekend' : ''}`}
                       onClick={() => isAdmin && handleCellClick(day, timeSlot)}
                     >
                       {event && isFirst && (
