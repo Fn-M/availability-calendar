@@ -7,8 +7,21 @@ const PublicPage = () => {
   const apiEndpoint = import.meta.env.VITE_API_ENDPOINT;
 
   useEffect(() => {
+    // If no API endpoint is configured, show demo data
+    if (!apiEndpoint) {
+      console.log('No API endpoint configured, showing demo data');
+      setEvents([]);
+      setLoading(false);
+      return;
+    }
+
     fetch(apiEndpoint+'/bookings')
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
       .then(data => {
         const parsedEvents = data.map(e => ({
           ...e,
@@ -20,6 +33,7 @@ const PublicPage = () => {
       })
       .catch((err) => {
         console.error("Failed to load events:", err);
+        setEvents([]);
         setLoading(false);
       });
   }, []);
