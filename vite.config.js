@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://nc5xq95e1e.execute-api.eu-west-1.amazonaws.com/prod',
+        target: process.env.VITE_API_ENDPOINT,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
         headers: {
