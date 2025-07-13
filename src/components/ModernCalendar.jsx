@@ -139,10 +139,12 @@ const ModernCalendar = ({ events: initialEvents, isAdmin }) => {
   const handleAddEvent = async (newEvent) => {
     try {
       // Ensure all values are properly formatted
+      console.log(newEvent.start)
+      console.log(newEvent.start.toISOString())
       const payload = {
         title: String(newEvent.title || ''),
         start: newEvent.start instanceof Date 
-          ? newEvent.start.toISOString() 
+          ? newEvent.start
           : new Date(newEvent.start).toISOString(),
         end: newEvent.end instanceof Date 
           ? newEvent.end.toISOString() 
@@ -342,12 +344,12 @@ const ModernCalendar = ({ events: initialEvents, isAdmin }) => {
         </div>
 
         <div className="day-columns-container">
-          {(isMobile ? [currentDate] : weekDays).map((day, dayIndex) => (
+          {(isMobile ? [currentDate] : weekDays).map((day, dayIndex, arr) => (
             <div 
               key={dayIndex} 
-              className={`day-column ${isWeekend(day) ? 'weekend' : ''}`}
+              className={`day-column${isWeekend(day) ? ' weekend' : ''}${dayIndex !== arr.length - 1 ? ' not-last' : ''}`}
             >
-              <div className={`day-header ${isWeekend(day) ? 'weekend' : ''}`}>
+              <div className={`day-header${isWeekend(day) ? ' weekend' : ''}`}>
                 <div className="day-name">{format(day, 'EEE')}</div>
                 <div className="day-date">{format(day, 'd/MM')}</div>
               </div>
@@ -355,11 +357,11 @@ const ModernCalendar = ({ events: initialEvents, isAdmin }) => {
                 {timeSlots.map((timeSlot, timeIndex) => {
                   const event = getEventForSlot(day, timeSlot);
                   const isFirst = isFirstSlotOfEvent(day, timeSlot, event);
-
+                  const isWeekendDay = isWeekend(day);
                   return (
                     <div
                       key={timeIndex}
-                      className={`time-slot-cell ${event ? 'booked' : 'available'}`}
+                      className={`time-slot-cell${event ? ' booked' : ' available'}${isWeekendDay ? ' weekend' : ''}`}
                       onClick={() => isAdmin && handleCellClick(day, timeSlot)}
                     >
                       {event && isFirst && (

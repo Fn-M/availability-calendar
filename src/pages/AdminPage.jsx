@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ModernCalendar from '../components/ModernCalendar';
 
 const AdminPage = () => {
-  const [authenticated, setAuthenticated] = useState(false);
+  const [authenticated, setAuthenticated] = useState(true);
   const [inputPassword, setInputPassword] = useState('');
   const [error, setError] = useState('');
   const [events, setEvents] = useState([]);
