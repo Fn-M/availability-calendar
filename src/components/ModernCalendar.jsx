@@ -139,8 +139,6 @@ const ModernCalendar = ({ events: initialEvents, isAdmin }) => {
   const handleAddEvent = async (newEvent) => {
     try {
       // Ensure all values are properly formatted
-      console.log(newEvent.start)
-      console.log(newEvent.start.toISOString())
       const payload = {
         title: String(newEvent.title || ''),
         start: newEvent.start instanceof Date 
@@ -154,8 +152,6 @@ const ModernCalendar = ({ events: initialEvents, isAdmin }) => {
         timezone: String(newEvent.timezone || 'Europe/Amsterdam')
       };
 
-      // Debug log
-      console.log('Sending payload:', payload);
 
       const response = await fetch(apiEndpoint + '/bookings', {
         method: 'POST',
@@ -166,11 +162,8 @@ const ModernCalendar = ({ events: initialEvents, isAdmin }) => {
         body: JSON.stringify(payload)
       });
 
-      // Log the raw response
-      console.log('Response status:', response.status);
 
       const data = await response.json();
-      console.log('Response data:', data);
 
       if (!response.ok) {
         throw new Error(data.message || 'Failed to create booking');
@@ -192,8 +185,6 @@ const ModernCalendar = ({ events: initialEvents, isAdmin }) => {
 
   const handleUpdateEvent = async (updatedEvent) => {
     try {
-      // Log the incoming event
-      console.log('Updating event:', updatedEvent);
 
       // Ensure all values are properly formatted
       const payload = {
@@ -210,8 +201,6 @@ const ModernCalendar = ({ events: initialEvents, isAdmin }) => {
         timezone: String(updatedEvent.timezone || 'Europe/Amsterdam')
       };
 
-      // Log the payload being sent
-      console.log('Sending update payload:', payload);
 
       const response = await fetch(apiEndpoint + '/bookings', {
         method: 'PUT',
@@ -223,9 +212,7 @@ const ModernCalendar = ({ events: initialEvents, isAdmin }) => {
       });
 
       // Log the response
-      console.log('Update response status:', response.status);
       const responseText = await response.text();
-      console.log('Update response text:', responseText);
 
       // Try to parse the response if it's JSON
       let data;
