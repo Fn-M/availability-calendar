@@ -49,7 +49,7 @@ const PublicPage = () => {
       <footer className="mt-10 text-center text-sm text-gray-500">
         <p className="mb-2">© {new Date().getFullYear()} Fábio Miranda</p>
         <a
-          href="https://www.linkedin.com/in/fabio-nmiranda/"
+          href={import.meta.env.VITE_LINKEDIN_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition"
